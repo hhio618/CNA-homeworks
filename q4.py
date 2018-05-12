@@ -60,7 +60,7 @@ if __name__ == '__main__':
         # Clustering coefficient
         average_clustering_coef = nx.average_clustering(G)
         report += ["Average clustering coefficient: %f" % float(average_clustering_coef)]
-        print [-1]
+        print report[-1]
         values = algos.betweenness_centrality(G)
         n = len(values)
         betweenness_coef = sum(values) / ((n - 1) * (n - 2))
