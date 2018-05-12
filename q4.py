@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     # Betweenness coefficient
     if snap_available:
-        G_snap = snap.LoadEdgeList(snap.PNGraph, "data/Datasets/Wiki-Vote.txt", 0, 1)
+        G_snap = snap.LoadEdgeList(snap.TNGraph, "data/Datasets/Wiki-Vote.txt", 0, 1)
         average_clustering_coef = snap.GetClustCf(G_snap, -1)
         report += ["Average clustering coefficient: %f" % float(average_clustering_coef)]
         print report[-1]
@@ -69,7 +69,7 @@ if __name__ == '__main__':
     # Saving eigs for faster computations
     if not (os.path.exists("outputs/q4/intermediates/vecs.npy") and
                 os.path.exists("outputs/q4/intermediates/vals.npy")):
-        laplacian_matrix = nx.linalg.directed_laplacian_matrix(G).todense()
+        laplacian_matrix = nx.linalg.laplacian_matrix(G).todense()
         vals, vecs = np.linalg.eigh(laplacian_matrix)
         np.save('outputs/q4/intermediates/vecs.npy', vecs)
         np.save('outputs/q4/intermediates/vals.npy', vals)
