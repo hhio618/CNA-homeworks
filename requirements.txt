@@ -1,3 +1,5 @@
+networkx
+community
 sklearn
 numpy
 matplotlib

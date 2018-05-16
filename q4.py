@@ -27,11 +27,6 @@ for gui in gui_env:
     except Exception as e:
         continue
 
-
-def global_clustering_coefficient(G):
-    return nx.average_clustering(G)
-
-
 if __name__ == '__main__':
     E = data.load_wiki_vote()
     # E = np.array([[1, 2], [2, 3], [3, 6], [6, 1], [7, 1]]) # for test
@@ -78,10 +73,10 @@ if __name__ == '__main__':
         vals = np.load('outputs/q4/intermediates/vals.npy')
 
     print "Run KMeans clustering on laplacian matrix..."
-    k = 30
+    k = 15
     report += ["KMeans using k=%d --> outputs/q4/idx.csv" % k]
     some_vecs = vecs[:, :k]
-    clusters = KMeans(n_clusters=k, random_state=0).fit(scale(some_vecs))
+    clusters = KMeans(n_clusters=k).fit(scale(some_vecs))
     print "KMeans clustering done!"
     np.savetxt('outputs/q4/idx.csv', clusters.labels_, delimiter=",", fmt="%d")
     print "Saving calculated labels to outputs/q4/idx.csv!"

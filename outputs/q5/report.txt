@@ -1,0 +1,3 @@
+TopDownKMeans --> outputs/q5/modularity-idx.csv
+Modularity vs clusters: 
+[(1, 0.0), (2, 0.05876217520936304), (4, 0.0718861295112699), (8, 0.07930644278100141), (16, 0.09478467021097976)]

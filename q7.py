@@ -3,13 +3,14 @@ from scipy.spatial.distance import cosine
 from sklearn.cluster import KMeans
 from sklearn.metrics import normalized_mutual_info_score
 import os
-import math
-from base.top_down_kmeans import TDKMeans
+from base.pagerank import PageRankClustering
+
 from data import data
 import matplotlib
 import networkx as nx
 import numpy as np
 import community
+import operator
 
 gui_env = ['TKAgg', 'GTKAgg', 'Qt4Agg', 'WXAgg']
 for gui in gui_env:
@@ -25,16 +26,13 @@ for gui in gui_env:
 
 
 def get_data_from(G):
-    def _func(sub_nodes):
-        print "Calculating modularity matrix and it's eigs ..."
-        mm = nx.modularity_matrix(G.subgraph(sub_nodes))
-        vals, vecs = scipy.linalg.eigh(mm)
-        print "Done"
-        count = vecs.shape[1]
-        vecs = np.flip(vecs, -1)
-        return vecs[:, :min(math.ceil(count / 2.0), 30)]
-
-    return _func
+    print "Calculating modularity matrix and it's eigs ..."
+    mm = nx.modularity_matrix(G)
+    vals, vecs = scipy.linalg.eigh(mm)
+    print "Done"
+    vecs = np.flip(vecs, -1)
+    ub = 10
+    return vecs[:, :int(ub)]  # our method!
 
 
 class ModularityCriterion:
@@ -72,42 +70,43 @@ if __name__ == '__main__':
     print "Done"
 
     print "Finding best lambda..."
-    lmbda = tm[:, 2].mean()
+
+    lmbda = 1.4 * tm[:, 2].mean()
+    # calculate_lambda_edges
+    tm = tm[tm[:, 2] >= lmbda]
     report += ["Lambda: %f" % lmbda]
     print report[-1]
     print "Done"
 
-    tm = tm[tm[:, 2] >= lmbda]
     graph = nx.Graph()
     graph.add_nodes_from(np.arange(0, nodes.shape[0]))
     graph.add_edges_from(tm[:, :2].astype('int').tolist())
-
+    k = 10
     print "Run KMeans clustering..."
-    model = TDKMeans()
-    mm_clusters = model.fit(get_data_from(graph), nodes.shape[0], ModularityCriterion(graph))
-    np.savetxt('outputs/q7/modularity-idx.csv', mm_clusters.C, delimiter=",", fmt="%d")
+    mm_clusters = KMeans(n_clusters=k).fit(get_data_from(graph)).labels_
+    np.savetxt('outputs/q7/modularity-idx.csv', mm_clusters, delimiter=",", fmt="%d")
     report += ["TopDownKMeans --> outputs/q7/modularity-idx.csv"]
-    nmi = normalized_mutual_info_score(mm_clusters.C, true_clusters)
+    nmi = normalized_mutual_info_score(mm_clusters, true_clusters)
     report += ["NMI(modularity matrix): %f" % nmi]
     print report[-1]
     print "Done"
 
-    print "Run pagerank clustering..."
-    # TODO pagerank clustering
+    print "Clustering using proposed model (pagerank)..."
+    print "Calculating pagerank ..."
+    pr = nx.pagerank(graph)
+    pr_nodes_sorted = np.asarray(sorted(pr.items(), key=operator.itemgetter(1), reverse=True))
+    print "Done"
+    report += ["PageRank top nodes --> " + np.array2string(pr_nodes_sorted[:k], separator=",")]
+    model = PageRankClustering()
+    clusters_pr = model.fit(graph=graph, top_nodes_dict=pr_nodes_sorted[:k])
+    nmi = normalized_mutual_info_score(clusters_pr, true_clusters)
+    report += ["NMI(PageRank clustering): %f" % nmi]
+    print report[-1]
+    np.savetxt("outputs/q7/pr-idx.csv", clusters_pr, delimiter=",", fmt="%d")
+    report += ["PageRank clustering result --> outputs/q7/pr-idx.csv"]
+    print report[-1]
     print "Done"
 
     with open("outputs/q7/report.txt", "w") as f:
         f.write("\n".join(report))
         print "Report generated at (outputs/q7/report.txt)."
-
-    print "Saving output graph to outputs/q7/graph.png..."
-    options = {
-        'node_color': 'blue',
-        'node_size': 1,
-        'line_color': 'red',
-        'linewidths': 0,
-        'width': 0.02,
-    }
-    nx.draw_spring(graph, **options)
-    plt.savefig("outputs/q7/graph.png")
-    print "Done"
