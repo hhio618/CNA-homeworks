@@ -51,6 +51,7 @@ class ModularityCriterion:
         return False
 
 
+
 if __name__ == '__main__':
     nodes = data.load_digits()
     true_clusters = data.load_digits_clusters()
@@ -70,11 +71,9 @@ if __name__ == '__main__':
     print "Done"
 
     print "Finding best lambda..."
-
     lmbda = 1.4 * tm[:, 2].mean()
-    # calculate_lambda_edges
     tm = tm[tm[:, 2] >= lmbda]
-    report += ["Lambda: %f" % lmbda]
+    report += ["Best Lambda: %f" % lmbda]
     print report[-1]
     print "Done"
 
