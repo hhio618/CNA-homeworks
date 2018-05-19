@@ -51,8 +51,25 @@ class ModularityCriterion:
         return False
 
 
+def calculate_lambda_edges(nodes, tm):
+    X = []
+    lmbda = None
+    first_change = True
+    for l in np.arange(0.0, 1, 0.05):
+        tm_copy = tm[tm[:, 2] >= l]
+        graph = nx.Graph()
+        graph.add_nodes_from(np.arange(0, nodes.shape[0]))
+        graph.add_edges_from(tm_copy[:, :2].astype('int').tolist())
+        num_isolate_node = len(nx.isolates(graph))
+        if num_isolate_node > 0 and first_change:
+            lmbda = l
+            first_change = False
+        X.append([l, num_isolate_node])
+    return np.asarray(X), lmbda
+
 
 if __name__ == '__main__':
+    np.set_printoptions(formatter={'float': '{: 0.3f}'.format})
     nodes = data.load_digits()
     true_clusters = data.load_digits_clusters()
     report = []
@@ -71,7 +88,17 @@ if __name__ == '__main__':
     print "Done"
 
     print "Finding best lambda..."
-    lmbda = 1.4 * tm[:, 2].mean()
+    X, lmbda = calculate_lambda_edges(nodes, tm)
+    report += ["Saving output lambda finder graph to outputs/q7/lambda-finder.png..."]
+    print report[-1]
+    report += ["Lambda vs #isolate nodes --> " + np.array2string(X, separator=",")]
+    plt.plot(X[:, 0], X[:, 1])
+    plt.title("Lambda finder")
+    plt.xlabel("Lambda")
+    plt.ylabel("#Isolate nodes")
+    plt.savefig("outputs/q7/lambda-finder.png")
+    print "Done"
+    # lmbda = 1.4 * tm[:, 2].mean()
     tm = tm[tm[:, 2] >= lmbda]
     report += ["Best Lambda: %f" % lmbda]
     print report[-1]

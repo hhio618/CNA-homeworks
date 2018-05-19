@@ -85,6 +85,9 @@ if __name__ == '__main__':
     points = xx, criterion.modularity_list
     report += ["Modularity vs clusters: \n" + str(zip(*points))]
     plt.plot(points[0], points[1])
+    plt.title("Modularity vs clusters")
+    plt.xlabel("Clusters")
+    plt.ylabel("Modularity")
     plt.savefig("outputs/q5/graph.png")
     print "Done"
 

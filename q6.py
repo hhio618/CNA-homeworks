@@ -21,6 +21,7 @@ for gui in gui_env:
 
 if __name__ == '__main__':
     E = data.load_wiki_vote()
+    np.set_printoptions(formatter={'float': '{: 0.5f}'.format})
     report = []
     # calculate measures
     G = nx.DiGraph()
@@ -33,8 +34,11 @@ if __name__ == '__main__':
     h, a = nx.hits(G)
     hits_nodes_sorted = np.asarray(sorted(h.items(), key=operator.itemgetter(1), reverse=True))
     print "Done"
-    plt.plot(pr_nodes_sorted[:100, 1])
-    plt.plot(hits_nodes_sorted[:100, 1])
+    plt.plot(pr_nodes_sorted[:100, 1], label="PageRank")
+    plt.plot(hits_nodes_sorted[:100, 1], label="HITS")
+    plt.legend(loc='upper right')
+    plt.xlabel("Top nodes")
+    plt.ylabel("Scores")
     plt.savefig("outputs/q6/scores.png")  # 15 based on figures
     k = 15
     report += ["PageRank top nodes --> " + np.array2string(pr_nodes_sorted[:k], separator=",")]
