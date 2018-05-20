@@ -42,7 +42,7 @@ if __name__ == '__main__':
     plt.savefig("outputs/q6/scores.png")  # 15 based on figures
     k = 15
     report += ["PageRank top nodes --> " + np.array2string(pr_nodes_sorted[:k], separator=",")]
-    report += ["HITS top nodes --> " + np.array2string(pr_nodes_sorted[:k], separator=",")]
+    report += ["HITS top nodes --> " + np.array2string(hits_nodes_sorted[:k], separator=",")]
 
     print "Clustering using proposed model (pagerank)..."
     model = PageRankClustering()

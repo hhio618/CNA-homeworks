@@ -73,7 +73,7 @@ if __name__ == '__main__':
         vals = np.load('outputs/q4/intermediates/vals.npy')
 
     print "Run KMeans clustering on laplacian matrix..."
-    k = 15
+    k = 30
     report += ["KMeans using k=%d --> outputs/q4/idx.csv" % k]
     some_vecs = vecs[:, :k]
     clusters = KMeans(n_clusters=k).fit(scale(some_vecs))
