@@ -106,7 +106,7 @@ def degreeDiscountIC2(G, k, p=.01):
         dd[u] = d[u]
         t[u] = 0
     for i in range(k):
-        u, ddv = max(dd.iteritems(), key=lambda (k,v): v)
+        u, ddv = max(dd.iteritems(), key=lambda k,v: v)
         dd.pop(u)
         S.append(u)
         for v in G[u]:
@@ -131,7 +131,7 @@ def binarySearchBoundary(G, k, Tsize, targeted_size, step, p, iterations):
         Tsize[k] = avg
     # check values of Tsize in between last 2 calculated steps
     while stepk != 1:
-        print k, stepk, Tsize[k]
+        print(k, stepk, Tsize[k])
         if Tsize[k] >= targeted_size:
             stepk = -int(math.ceil(float(abs(stepk))/2))
         else:
