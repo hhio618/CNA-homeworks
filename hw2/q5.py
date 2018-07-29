@@ -83,5 +83,5 @@ if __name__ == '__main__':
 
     with open("outputs/q5/report.txt", "w") as f:
         f.write("\n".join(report))
-        print "Report generated at (outputs/q5/report.txt)."
+        print("Report generated at (outputs/q5/report.txt).")
 
