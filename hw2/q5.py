@@ -77,7 +77,7 @@ if __name__ == '__main__':
     print(report[-1])
     report += ["Searching using binary search..."]
     print(report[-1])
-    S, Tsize = spreadDegreeDiscount(G, targeted_size, step=200, p=p)
+    S, Tsize = spreadDegreeDiscount(G, targeted_size, step=1000, p=p)
     report += ["Find a solution #Seed: %d, #Target: %d"%(len(S), Tsize[len(S)])]
     print(report[-1])
 
