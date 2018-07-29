@@ -2,7 +2,7 @@
 of influence propagation in graph G
 [1] -- Wei Chen et al. Efficient influence maximization in Social Networks
 '''
-from pq import PriorityQueue as PQ # priority queue
+from base.pq import PriorityQueue as PQ # priority queue
 import math
 
 import networkx as nx
