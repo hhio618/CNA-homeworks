@@ -46,7 +46,7 @@ if __name__ == '__main__':
     # y axis targeted set count
     target_counts = []
     # we calculate average activated set size
-    iterations = 200 # number of iterations
+    iterations = 5 # number of iterations
     for percent in seed_percent:
             seed_size = int(percent*num_nodes)
             report += ["Find seed set for %d percent of graph(%d nodes)" % (int(percent*100),seed_size)]
