@@ -1,0 +1,5 @@
+Average clustering coefficient: 0.140898
+Average betweenness coefficient: 1.108641
+KMeans using k=30 --> outputs/q4/idx.csv
+Modularity: -0.000185
+Minimum cut: 1

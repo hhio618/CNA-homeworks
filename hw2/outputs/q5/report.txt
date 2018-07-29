@@ -1,0 +1,33 @@
+Find seed set for 1 percent of graph(18 nodes)
+Initial set of 18 nodes chosen
+Avg. Targeted 495 nodes out of 1811
+Find seed set for 2 percent of graph(36 nodes)
+Initial set of 36 nodes chosen
+Avg. Targeted 565 nodes out of 1811
+Find seed set for 3 percent of graph(54 nodes)
+Initial set of 54 nodes chosen
+Avg. Targeted 646 nodes out of 1811
+Find seed set for 4 percent of graph(72 nodes)
+Initial set of 72 nodes chosen
+Avg. Targeted 735 nodes out of 1811
+Find seed set for 5 percent of graph(90 nodes)
+Initial set of 90 nodes chosen
+Avg. Targeted 760 nodes out of 1811
+Find seed set for 6 percent of graph(108 nodes)
+Initial set of 108 nodes chosen
+Avg. Targeted 798 nodes out of 1811
+Find seed set for 6 percent of graph(126 nodes)
+Initial set of 126 nodes chosen
+Avg. Targeted 820 nodes out of 1811
+Find seed set for 8 percent of graph(144 nodes)
+Initial set of 144 nodes chosen
+Avg. Targeted 846 nodes out of 1811
+Find seed set for 9 percent of graph(162 nodes)
+Initial set of 162 nodes chosen
+Avg. Targeted 874 nodes out of 1811
+Find seed set for 10 percent of graph(181 nodes)
+Initial set of 181 nodes chosen
+Avg. Targeted 894 nodes out of 1811
+Searching for optimum seed size for target of size 95%(1720 of 1811)
+Searching using binary search...
+Find a solution #Seed: 1499, #Target: 1719
