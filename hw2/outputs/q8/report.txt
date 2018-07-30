@@ -30,4 +30,4 @@ PageRank top nodes --> s[[ 447.000, 0.004],
  [ 1180.000, 0.002],
  [ 675.000, 0.002],
  [ 1195.000, 0.001]]
-Accuracy(PageRank clustering): 0.112966
+Accuracy(PageRank clustering): 0.822966
