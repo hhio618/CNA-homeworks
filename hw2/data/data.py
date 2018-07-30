@@ -10,3 +10,9 @@ def load_actor_movie_weighted():
     one = np.ones(shape=len(E))
     return np.c_[E, one]
 
+def load_digits():
+    return np.loadtxt("data/Datasets/digits", dtype=int)
+
+
+def load_digits_clusters():
+    return np.loadtxt("data/Datasets/realIdx", dtype=int)

@@ -1,0 +1,36 @@
+Sampling for 5 percent of graph
+Using sampler NodeSampler
+Average clustering coefficient: 0.000097
+Using sampler RWSampler
+Average clustering coefficient: 0.003264
+Using sampler EdgeSampler
+Average clustering coefficient: 0.000026
+Using sampler DFSSampler
+Average clustering coefficient: 0.000000
+Sampling for 10 percent of graph
+Using sampler NodeSampler
+Average clustering coefficient: 0.000145
+Using sampler RWSampler
+Average clustering coefficient: 0.002151
+Using sampler EdgeSampler
+Average clustering coefficient: 0.000036
+Using sampler DFSSampler
+Average clustering coefficient: 0.000000
+Sampling for 15 percent of graph
+Using sampler NodeSampler
+Average clustering coefficient: 0.000238
+Using sampler RWSampler
+Average clustering coefficient: 0.001711
+Using sampler EdgeSampler
+Average clustering coefficient: 0.000069
+Using sampler DFSSampler
+Average clustering coefficient: 0.000000
+Sampling for 20 percent of graph
+Using sampler NodeSampler
+Average clustering coefficient: 0.000271
+Using sampler RWSampler
+Average clustering coefficient: 0.000000
+Using sampler EdgeSampler
+Average clustering coefficient: 0.000087
+Using sampler DFSSampler
+Average clustering coefficient: 0.000306

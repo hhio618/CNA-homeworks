@@ -118,13 +118,13 @@ class Dendogram:
     def likelihood(self):
         def _likelihood(node):
             if node.leaf:
-                return 1.0
-            l = 1.0
+                return 0.0
+            l = 0.0
             for child in node.childs:
-                l *= _likelihood(child)
+                l += np.log(_likelihood(child))
             (real_links, possible_links) = node.link_value
-            return l * ((real_links/possible_links) ** real_links) *  (1.0-real_links/possible_links) ** (possible_links-real_links)
-        return _likelihood(self.root)
+            return l + np.log(real_links/possible_links) * real_links +  np.log(1.0-real_links/possible_links) * (possible_links-real_links)
+        return np.log_likelihood(self.root)
 
     def __str__(self):
         return str(self.root)
@@ -264,17 +264,12 @@ def link_prediction(D,edge_list):
 
 random.seed(0)
 if __name__ == '__main__':
-    # E = data.load_actor_movie()[:100]
-    # G = nx.Graph()
-    # G.add_edges_from(E)
-    # # # balance the imbalanced data 65 , 35 percent
-    # G = balance(G)
+    E = random.sample(data.load_actor_movie(),1000)
+    G = nx.Graph()
+    G.add_edges_from(E)
+    # # balance the imbalanced data 65 , 35 percent
+    G = balance(G)
     report = []
-    # calculate measures
-    n = 20  # 10 nodes
-    m = 100  # 20 edges
-
-    G = nx.gnm_random_graph(n, m)
     G_train, E_test, y_test = train_test_split(G,0.7)
     similaritie = [ShortestPathSimilarity(G_train),JCSimilarity(G_train), KATZSimilarity(G_train, 0.8)]
     liklihoods = []

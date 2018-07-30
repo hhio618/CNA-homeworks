@@ -116,14 +116,14 @@ def degreeDiscountIC2(G, k, p=.01):
     return S
 
 
-def binarySearchBoundary(G, k, Tsize, targeted_size, step, p, iterations):
+def binarySearchBoundary(seed_func, G, k, Tsize, targeted_size, step, p, iterations):
     # initialization for binary search
 
     R = iterations
     stepk = -int(math.ceil(float(step)/2))
     k += stepk
     if k not in Tsize:
-        S = degreeDiscountIC(G, k, p)
+        S = seed_func(G, k, p)
         avg = 0
         for i in range(R):
             T = runIC(G, S, p)
@@ -139,7 +139,7 @@ def binarySearchBoundary(G, k, Tsize, targeted_size, step, p, iterations):
         k += stepk
 
         if k not in Tsize:
-            S = degreeDiscountIC(G, k, p)
+            S = seed_func(G, k, p)
             avg = 0
             for i in range(R):
                 T = runIC(G, S, p)
@@ -147,7 +147,7 @@ def binarySearchBoundary(G, k, Tsize, targeted_size, step, p, iterations):
             Tsize[k] = avg
     return S, Tsize
 
-def spreadDegreeDiscount(G, targeted_size, step=1, p=.01, iterations=200):
+def spreadMaxFinder(seed_func, G, targeted_size, step=1, p=.01, iterations=200):
     ''' Finds initial set of nodes to propagate in Independent Cascade model (with priority queue)
     Input: G -- networkx graph object
     targeted_size -- desired size of targeted set
@@ -166,7 +166,7 @@ def spreadDegreeDiscount(G, targeted_size, step=1, p=.01, iterations=200):
 
     while Tsize[k] <= targeted_size:
         k += step
-        S = degreeDiscountIC(G, k, p)
+        S = seed_func(G, k, p)
         avg = 0
         for i in range(R):
             T = runIC(G, S, p)
@@ -176,5 +176,5 @@ def spreadDegreeDiscount(G, targeted_size, step=1, p=.01, iterations=200):
         print(k, Tsize[k])
 
     # binary search for optimal solution
-    return binarySearchBoundary(G, k, Tsize, targeted_size, step, p, iterations)
+    return binarySearchBoundary(seed_func, G, k, Tsize, targeted_size, step, p, iterations)
 

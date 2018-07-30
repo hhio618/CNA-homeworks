@@ -54,7 +54,7 @@ def clustering_coef(G):
 def calculate_params(G):
     params = []
     try:
-        params = np.loadtxt("outputs/q4/tmp/%s.txt" % G.__hash__())
+        params = np.loadtxt("outputs/q4/tmp/h%s.txt" % G.__hash__())
     except Exception as e:
         num_nodes = len(G.nodes())
         ccoef = float(clustering_coef(G))
@@ -62,14 +62,17 @@ def calculate_params(G):
                         map(lambda x: x[1], G.in_degree()))/float(num_nodes)
         out_avg = reduce(lambda a, b: a+b,
                         map(lambda x: x[1], G.out_degree()))/float(num_nodes)
-        max_d = -sys.maxsize
-        G_undirected = G.to_undirected()
-        for c in nx.connected_components(G_undirected):
-            d = G_undirected.subgraph(c).diameter()
-            if d> max_d:
-                max_d = d
-        params = [ccoef, in_avg, out_avg, max_d]
-        np.savetxt(params, "outputs/q4/tmp/%s.txt" % G.__hash__())
+        Ghat = G.to_undirected()
+        d = 0
+        # i = 0
+        # for c in nx.connected_components(Ghat):
+        #     Ghat_comp = Ghat.subgraph(c)
+        #     d += nx.average_shortest_path_length(Ghat_comp)
+        #     i+=1
+        # d = d/float(i)
+        
+        params = [ccoef, in_avg, out_avg, d]
+        np.savetxt("outputs/q4/tmp/h%s.txt" % G.__hash__(), params)
     return params
 
 
@@ -78,21 +81,13 @@ class DFSSampler:
         self.G = G
 
     def sample(self, percent):
-        num_sample_edges = int(percent * self.G.number_of_edges())
+        num_sample_nodes = int(percent * self.G.number_of_nodes())
         start_node = random.sample(self.G.nodes(), 1)[0]
-        sampled_edges = self.dfs(start_node, num_sample_edges)
-        G = nx.DiGraph()
-        G.add_edges_from(sampled_edges)
-        return G
+        sampled_nodes = self.dfs(start_node, num_sample_nodes)
+        return self.G.subgraph(sampled_nodes)
 
-    def dfs(self, start_node, num_sample_edges):
-        sampled_edges = []
-        for edge in nx.edge_dfs(self.G, start_node):
-            if len(sampled_edges) < num_sample_edges:
-                sampled_edges.append(edge)
-            else:
-                break
-        return sampled_edges
+    def dfs(self, start_node, num_sample_nodes):
+        return nx.dfs_preorder_nodes(self.G,start_node, depth_limit=num_sample_nodes)
 
     def __str__(self):
         return "DFSSampler"
@@ -108,25 +103,8 @@ class RWSampler:
         return self.G.subgraph(sampled_nodes)
 
     def random_walk(self, size=-1):
-        start_node = random.sample(self.G.nodes(), 1)[0]
-        v = start_node
-        nodes = [start_node]
-        for c in itertools.count():
-            if c == size:
-                break
-            p = random.random()
-            neighbors = list(self.G.neighbors(v))
-            # Get stucking
-            if len(neighbors) == 0:
-                random.sample(self.G.nodes(), 1)[0]
-                continue
-            candidate = random.sample(self.G.neighbors(v), 1)[0]
-            if candidate in nodes:
-                random.sample(self.G.nodes(), 1)[0]
-                continue
-            v = candidate
-            nodes.append(v)
-        return nodes
+        pr = nx.pagerank(self.G)
+        return pr.keys()[:size]
 
     def __str__(self):
         return "RWSampler"
@@ -138,26 +116,28 @@ class FFSampler:
 
     def sample(self, percent):
         num_sample_nodes = int(percent * self.G.number_of_nodes())
-        sampled_nodes = self.forest_fire(num_sample_nodes)
+        sampled_nodes = self.forest_fire(pf=0.5, size=num_sample_nodes)
         return self.G.subgraph(sampled_nodes)
 
     def forest_fire(self, pf, size=-1):
         p = float(1-pf)/pf
         start_node = random.sample(self.G.nodes(), 1)[0]
-        v = start_node
         nodes = [start_node]
 
-        def _forest_fire():
+        def _forest_fire(v, nodes):
+            if len(nodes) > size:
+                return
             x = np.random.geometric(p=p)
             neighbors = list(self.G.neighbors(v))
-            unvisited_neighbors = [x for x in neighbors if not(x in nodes)]
+            unvisited_neighbors = [item for item in neighbors if not(x in nodes)]
             nodes += unvisited_neighbors
             for w in unvisited_neighbors:
-                _forest_fire(w)
+                _forest_fire(w, nodes)
+        _forest_fire(start_node, nodes)
         return nodes
 
     def __str__(self):
-        return "NodeSampler"
+        return "FFSampler"
 
 
 class NodeSampler:
@@ -197,8 +177,8 @@ if __name__ == '__main__':
     G = nx.DiGraph()
     G.add_edges_from(E)
     org_params = [0.1,2.,2.,5.]#calculate_params(G)
-    samplers = [NodeSampler(G),\
-            EdgeSampler(G), DFSSampler(G)]
+    samplers = [NodeSampler(G),RWSampler(G),
+            EdgeSampler(G), DFSSampler(G),FFSampler(G)]
     # For saving hyper parameters
     param_names = ['ccoef', 'in', 'out', 'd']
     parameters = create_param_dict(samplers, *param_names)
@@ -220,18 +200,17 @@ if __name__ == '__main__':
             print report[-1]
 
     # Draw Sampled graph parameters vs Original graph
-    indics = ["*b","^r","oy","xg","-p"]
-    for param,indic in zip(param_names,indics):
+    indics = ["*b-","^r:","oy--","xg-.","pk-"]
+    xx = percentages
+    for param in param_names:
         plt.figure()
         # Draw original parameters
         yy = [org_params[param_names.index(param)]]*len(xx)
-        plt.plot(xx, yy,indic,s=10,label="original")
-
-        for sampler in samplers:
-            xx = percentages
+        plt.plot(xx, yy, "k-",linewidth=2, label="original")
+        for sampler, indic in zip(samplers, indics):
             yy = parameters[str(sampler)][param]
             # Print out the figure
-            plt.plot(xx, yy,indic, label=str(sampler))
+            plt.plot(xx, yy,indic,linewidth=2, label=str(sampler))
             plt.title("%s vs sampling percentage"% param)
             plt.xlabel("Sampling percentage")
             plt.ylabel(param)
