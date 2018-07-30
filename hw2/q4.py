@@ -64,13 +64,12 @@ def calculate_params(G):
                         map(lambda x: x[1], G.out_degree()))/float(num_nodes)
         Ghat = G.to_undirected()
         d = 0
-        # i = 0
-        # for c in nx.connected_components(Ghat):
-        #     Ghat_comp = Ghat.subgraph(c)
-        #     d += nx.average_shortest_path_length(Ghat_comp)
-        #     i+=1
-        # d = d/float(i)
-        
+        i = 0
+        for c in nx.connected_components(Ghat):
+            Ghat_comp = Ghat.subgraph(c)
+            d += nx.average_shortest_path_length(Ghat_comp)
+            i+=1
+        d = d/float(i)
         params = [ccoef, in_avg, out_avg, d]
         np.savetxt("outputs/q4/tmp/h%s.txt" % G.__hash__(), params)
     return params
@@ -120,19 +119,19 @@ class FFSampler:
         return self.G.subgraph(sampled_nodes)
 
     def forest_fire(self, pf, size=-1):
-        p = float(1-pf)/pf
         start_node = random.sample(self.G.nodes(), 1)[0]
         nodes = [start_node]
 
         def _forest_fire(v, nodes):
             if len(nodes) > size:
                 return
-            x = np.random.geometric(p=p)
             neighbors = list(self.G.neighbors(v))
             unvisited_neighbors = [item for item in neighbors if not(x in nodes)]
-            nodes += unvisited_neighbors
-            for w in unvisited_neighbors:
-                _forest_fire(w, nodes)
+            must_burn_count = int(len(unvisited_neighbors)*pf)
+            added = random.sample(unvisited_neighbors, must_burn_count)
+            nodes += added
+            for w in added:
+                    _forest_fire(w, nodes)
         _forest_fire(start_node, nodes)
         return nodes
 

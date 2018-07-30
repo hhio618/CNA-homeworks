@@ -266,10 +266,9 @@ def link_prediction(D,edge_list):
 
 random.seed(0)
 if __name__ == '__main__':
-    E = data.load_actor_movie()
+    E = data.load_actor_movie()[:4000]
     G = nx.Graph()
     G.add_edges_from(E)
-    G = G.subgraph(xrange(1000)).copy()
     # # balance the imbalanced data 65 , 35 percent
     G = balance(G)
     report = []
