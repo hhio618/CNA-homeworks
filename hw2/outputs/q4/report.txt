@@ -1,36 +1,44 @@
 Sampling for 5 percent of graph
 Using sampler NodeSampler
-Average clustering coefficient: 0.000097
+Average clustering coefficient: 0.000000
 Using sampler RWSampler
-Average clustering coefficient: 0.003264
+Average clustering coefficient: 0.040120
 Using sampler EdgeSampler
-Average clustering coefficient: 0.000026
+Average clustering coefficient: 0.000000
 Using sampler DFSSampler
 Average clustering coefficient: 0.000000
+Using sampler FFSampler
+Average clustering coefficient: 0.027673
 Sampling for 10 percent of graph
 Using sampler NodeSampler
-Average clustering coefficient: 0.000145
+Average clustering coefficient: 0.000000
 Using sampler RWSampler
-Average clustering coefficient: 0.002151
+Average clustering coefficient: 0.017453
 Using sampler EdgeSampler
-Average clustering coefficient: 0.000036
+Average clustering coefficient: 0.001201
 Using sampler DFSSampler
+Average clustering coefficient: 0.000000
+Using sampler FFSampler
 Average clustering coefficient: 0.000000
 Sampling for 15 percent of graph
 Using sampler NodeSampler
-Average clustering coefficient: 0.000238
+Average clustering coefficient: 0.000000
 Using sampler RWSampler
-Average clustering coefficient: 0.001711
+Average clustering coefficient: 0.007968
 Using sampler EdgeSampler
-Average clustering coefficient: 0.000069
+Average clustering coefficient: 0.001754
 Using sampler DFSSampler
+Average clustering coefficient: 0.000000
+Using sampler FFSampler
 Average clustering coefficient: 0.000000
 Sampling for 20 percent of graph
 Using sampler NodeSampler
-Average clustering coefficient: 0.000271
+Average clustering coefficient: 0.003982
 Using sampler RWSampler
-Average clustering coefficient: 0.000000
+Average clustering coefficient: 0.005501
 Using sampler EdgeSampler
-Average clustering coefficient: 0.000087
+Average clustering coefficient: 0.003541
 Using sampler DFSSampler
-Average clustering coefficient: 0.000306
+Average clustering coefficient: 0.000000
+Using sampler FFSampler
+Average clustering coefficient: 0.000000

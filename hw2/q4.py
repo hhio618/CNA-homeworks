@@ -58,12 +58,9 @@ def calculate_params(G):
     except Exception as e:
         num_nodes = len(G.nodes())
         ccoef = float(clustering_coef(G))
-        in_avg = reduce(lambda a, b: a+b,
-                        map(lambda x: x[1], G.in_degree()))/float(num_nodes)
-        out_avg = reduce(lambda a, b: a+b,
-                        map(lambda x: x[1], G.out_degree()))/float(num_nodes)
+        in_avg = out_avg = sum(map(lambda v:v[1],G.degree()))/float(num_nodes)
         Ghat = G.to_undirected()
-        d = 0
+        d = 1.0
         i = 0
         for c in nx.connected_components(Ghat):
             Ghat_comp = Ghat.subgraph(c)
@@ -126,7 +123,7 @@ class FFSampler:
             if len(nodes) > size:
                 return
             neighbors = list(self.G.neighbors(v))
-            unvisited_neighbors = [item for item in neighbors if not(x in nodes)]
+            unvisited_neighbors = [item for item in neighbors if not(item in nodes)]
             must_burn_count = int(len(unvisited_neighbors)*pf)
             added = random.sample(unvisited_neighbors, must_burn_count)
             nodes += added
@@ -169,13 +166,14 @@ class EdgeSampler:
 
 
 if __name__ == '__main__':
-    E = data.load_actor_movie()
+    E = data.load_actor_movie()[:10000]
     # E = np.array([[1, 2], [2, 3], [3, 6], [6, 1], [7, 1]]) # for test
     report = []
     # calculate measures
     G = nx.DiGraph()
+    G.degree()
     G.add_edges_from(E)
-    org_params = [0.1,2.,2.,5.]#calculate_params(G)
+    org_params = calculate_params(G)
     samplers = [NodeSampler(G),RWSampler(G),
             EdgeSampler(G), DFSSampler(G),FFSampler(G)]
     # For saving hyper parameters
