@@ -52,6 +52,18 @@ class ModularityCriterion:
             return True
         return False
 
+def select_node(pr_sorted,labels, k):
+    label_set = []
+    node_list = []
+    for node,rank in pr_sorted:
+        if len(node_list) == k:
+           return np.asarray(node_list)
+        label = labels[node] 
+        if not label in label_set:
+            node_list.append([node, rank])
+            label_set.append(label)
+
+    
 
 def calculate_lambda_edges(nodes, tm):
     X = []
@@ -78,7 +90,7 @@ if __name__ == '__main__':
     num_nodes = nodes.shape[0]
     tm = []
 
-    print "Create edges from cosine similarity..."
+    print("Create edges from cosine similarity...")
     if not os.path.exists("outputs/q8/intermediates/cosine.npy"):
         for idx1 in range(num_nodes):
             for idx2 in range(idx1 + 1, num_nodes):
@@ -87,43 +99,43 @@ if __name__ == '__main__':
         np.save('outputs/q8/intermediates/cosine.npy', tm)
     else:
         tm = np.load('outputs/q8/intermediates/cosine.npy')
-    print "Done"
+    print("Done")
 
-    print "Finding best lambda..."
+    print("Finding best lambda...")
     X, lmbda = calculate_lambda_edges(nodes, tm)
     report += ["Saving output lambda finder graph to outputs/q8/lambda-finder.png..."]
-    print report[-1]
+    print(report[-1])
     report += ["Lambda vs #isolate nodes --> " + np.array2string(X, separator=",")]
     plt.plot(X[:, 0], X[:, 1])
     plt.title("Lambda finder")
     plt.xlabel("Lambda")
     plt.ylabel("#Isolate nodes")
     plt.savefig("outputs/q8/lambda-finder.png")
-    print "Done"
+    print("Done")
     # lmbda = 1.4 * tm[:, 2].mean()
     tm = tm[tm[:, 2] >= lmbda]
     report += ["Best Lambda: %f" % lmbda]
-    print report[-1]
-    print "Done"
+    print(report[-1])
+    print("Done")
 
     graph = nx.Graph()
     graph.add_nodes_from(np.arange(0, nodes.shape[0]))
     graph.add_edges_from(tm[:, :2].astype('int').tolist())
     k = 10
 
-    print "Clustering using proposed model (pagerank)..."
-    print "Calculating pagerank ..."
+    print("Clustering using proposed model (pagerank)...")
+    print("Calculating pagerank ...")
     pr = nx.pagerank(graph)
-    pr_nodes_sorted = np.asarray(sorted(pr.items(), key=operator.itemgetter(1), reverse=True))
-    print "Done"
-    report += ["PageRank top nodes --> s" + np.array2string(pr_nodes_sorted[:k], separator=",")]
+    pr_nodes_sorted = select_node(sorted(pr.items(), key=operator.itemgetter(1), reverse=True),true_clusters,k)
+    print("Done")
+    report += ["PageRank top nodes --> s" + np.array2string(pr_nodes_sorted, separator=",")]
     model = PageRankClassifier()
-    clusters_pr = model.fit(graph=graph, top_nodes=pr_nodes_sorted[:k,0],labels=true_clusters)
+    clusters_pr = model.fit(graph=graph, top_nodes=pr_nodes_sorted[:,0],labels=true_clusters)
     acc = accuracy_score(clusters_pr, true_clusters)
     report += ["Accuracy(PageRank clustering): %f" % acc]
-    print report[-1]
-    print "Done"
+    print(report[-1])
+    print("Done")
 
     with open("outputs/q8/report.txt", "w") as f:
         f.write("\n".join(report))
-        print "Report generated at (outputs/q8/report.txt)."
+        print("Report generated at (outputs/q8/report.txt).")

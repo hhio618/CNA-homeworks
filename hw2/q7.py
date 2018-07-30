@@ -48,6 +48,7 @@ class Node:
     
     def __repr__(self):
         return ("Node<*" if self.leaf else "Node<") + "id:%d,l:%s>" %(self.id, self.link_value)
+    
     def __str__(self, level=0):
         ret = "\t"*level+ ("*" if self.leaf else "") +repr(self.link_value)+"\n"
         for child in self.childs:
@@ -61,6 +62,7 @@ class Node:
              parents.append(u)
              u = u.parent
         return parents
+
     def lca(self, u):
          this_all_parent = self.all_parents()
          u_all_parent = u.all_parents()
@@ -68,8 +70,7 @@ class Node:
          for x in this_all_parent: 
             if x in u_all_parent: #for any item 'x' from collection 'i', find the same item in collection of 'j'
                 return x # print out the results
-
-         
+ 
     def leafs(self):
         leafs = []
         def _get_leaf_nodes(node):
@@ -266,7 +267,7 @@ def link_prediction(D,edge_list):
 
 random.seed(0)
 if __name__ == '__main__':
-    E = data.load_actor_movie()[:4000]
+    E = data.load_actor_movie()[:200]
     G = nx.Graph()
     G.add_edges_from(E)
     # # balance the imbalanced data 65 , 35 percent
