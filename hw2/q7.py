@@ -101,7 +101,8 @@ class Dendogram:
     def _node(self, u):
         return self.leafs[u]
     # u ,v are leafs
-    def link_prob(self, (u, v)):
+    def link_prob(self, tup):
+        u, v = tup
         n1 = self._node(u).lca(self._node(v))
         return n1.link_value[0]/n1.link_value[1]
 
