@@ -33,6 +33,8 @@ for gui in gui_env:
     except Exception as e:
         continue
 
+if sys.version_info >= (3, 0):
+    xrange = range
 
 class Node:
     def __init__(self, id, parent, sim_value, link_value=(1.0,1.0), childs=None, leaf=False):
