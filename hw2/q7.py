@@ -218,8 +218,7 @@ class ShortestPathSimilarity:
                 if i == j:
                     S[i, j] = 0
                 else:
-                    S[i, j] = S[j, i] = (len(nx.shortest_path(
-                        self.G, i, j))+len(nx.shortest_path(self.G, i, j)))/2.0
+                        S[i, j] = S[j, i] = len(nx.shortest_path(self.G, i, j))
         return S
 
     def __str__(self):
@@ -267,9 +266,10 @@ def link_prediction(D,edge_list):
 
 random.seed(0)
 if __name__ == '__main__':
-    E = data.load_actor_movie()[:1000]
+    E = data.load_actor_movie()
     G = nx.Graph()
     G.add_edges_from(E)
+    G = G.subgraph(xrange(1000)).copy()
     # # balance the imbalanced data 65 , 35 percent
     G = balance(G)
     report = []

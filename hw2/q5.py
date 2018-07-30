@@ -33,7 +33,7 @@ for gui in gui_env:
 
 
 def run(hw_name, seed_func):
-    E = data.load_actor_movie()[:1000]
+    E = data.load_actor_movie_weighted()[:1000]
     # E = np.array([[1, 2], [2, 3], [3, 6], [6, 1], [7, 1]]) # for test
     report = []
     # calculate measures
