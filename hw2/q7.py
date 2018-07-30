@@ -284,7 +284,7 @@ if __name__ == '__main__':
             predictions += [link_prediction(D, E_test)]
             liklihoods +=[D.likelihood()]
             report += ["Dendogram liklihood: "+ str(liklihoods[-1])]
-            print report[-1]
+            print(report[-1])
     
     # weighted sum over all models 
     liklihoods = np.asarray(liklihoods)
