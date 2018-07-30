@@ -33,7 +33,7 @@ for gui in gui_env:
 
 
 def run(hw_name, seed_func):
-    E = data.load_actor_movie_weighted()[:5000]
+    E = data.load_actor_movie_weighted()[:6000]
     # E = np.array([[1, 2], [2, 3], [3, 6], [6, 1], [7, 1]]) # for test
     report = []
     # calculate measures
@@ -46,7 +46,7 @@ def run(hw_name, seed_func):
     # y axis targeted set count
     target_counts = []
     # we calculate average activated set size
-    iterations = 5  # number of iterations
+    iterations = 100  # number of iterations
     for percent in seed_percent:
             seed_size = int(percent*num_nodes)
             report += ["Find seed set for %d percent of graph(%d nodes)" % (
