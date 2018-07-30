@@ -82,6 +82,11 @@ class Node:
         _get_leaf_nodes(self)
         return leafs
 
+def mylog(x):
+    if x == 0:
+        return 0
+    else:
+        return np.log(x)
 
 class Dendogram:
     def __init__(self, G, S):
@@ -125,10 +130,10 @@ class Dendogram:
                 return 0.0
             l = 0.0
             for child in node.childs:
-                l += np.log(_likelihood(child))
+                l += _likelihood(child)
             (real_links, possible_links) = node.link_value
-            return l + np.log(real_links/possible_links) * real_links +  np.log(1.0-real_links/possible_links) * (possible_links-real_links)
-        return np.log_likelihood(self.root)
+            return l + mylog(real_links/possible_links) * real_links +  mylog(1.0-real_links/possible_links) * (possible_links-real_links)
+        return _likelihood(self.root)
 
     def __str__(self):
         return str(self.root)
@@ -267,8 +272,9 @@ def link_prediction(D,edge_list):
 
 random.seed(0)
 if __name__ == '__main__':
-    E = data.load_actor_movie()[:200]
+    E = data.load_actor_movie()[:10000]
     G = nx.Graph()
+    G.add_node(0)
     G.add_edges_from(E)
     # # balance the imbalanced data 65 , 35 percent
     G = balance(G)
@@ -285,7 +291,7 @@ if __name__ == '__main__':
             print(D)
             predictions += [link_prediction(D, E_test)]
             liklihoods +=[D.likelihood()]
-            report += ["Dendogram liklihood: "+ str(liklihoods[-1])]
+            report += ["Dendogram log liklihood: "+ str(liklihoods[-1])]
             print(report[-1])
     
     # weighted sum over all models 
@@ -295,3 +301,7 @@ if __name__ == '__main__':
     print(predictions,weighted_predictions)
     report += ["Presicion: "+ str(precision(y_test, weighted_predictions))]
     print(report[-1])
+
+    with open("outputs/q7/report.txt", "w") as f:
+        f.write("\n".join(report))
+        print("Report generated at (outputs/q7/report.txt).")

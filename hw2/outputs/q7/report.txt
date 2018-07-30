@@ -1,0 +1,7 @@
+Using similarity ShortestPathSimilarity
+Dendogram log liklihood: -22.8181865228
+Using similarity JCSimilarity
+Dendogram log liklihood: -22.6126614521
+Using similarity KATZSimilarity
+Dendogram log liklihood: -23.0616610606
+Presicion: 0.55467
