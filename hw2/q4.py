@@ -58,7 +58,10 @@ def calculate_params(G):
     except Exception as e:
         num_nodes = len(G.nodes())
         ccoef = float(clustering_coef(G))
-        in_avg = out_avg = sum(map(lambda v:v[1],G.degree()))/float(num_nodes)
+        in_avg = reduce(lambda a, b: a+b,
+                        map(lambda x: x[1], G.in_degree()))/float(num_nodes)
+        out_avg = reduce(lambda a, b: a+b,
+                        map(lambda x: x[1], G.out_degree()))/float(num_nodes)
         Ghat = G.to_undirected()
         d = 1.0
         i = 0
@@ -197,7 +200,7 @@ if __name__ == '__main__':
             print report[-1]
 
     # Draw Sampled graph parameters vs Original graph
-    indics = ["*b-","^r:","oy--","xg-.","pk-"]
+    indics = ["*b--","^r:","oy--","xg-.","pk--"]
     xx = percentages
     for param in param_names:
         plt.figure()
